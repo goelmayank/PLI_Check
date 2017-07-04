@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Rectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="56" Xpos="237" Ypos="175" Width="356" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="38" Xpos="237.095" Ypos="177.952" Width="7" Height="451" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="56" Xpos="237" Ypos="175" Width="356" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="40" Xpos="407.162" Ypos="176.819" Width="7" Height="239" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="56" Xpos="237" Ypos="175" Width="356" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="38" Xpos="237.095" Ypos="177.952" Width="7" Height="451" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="56" Xpos="237" Ypos="175" Width="356" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="40" Xpos="407.162" Ypos="176.819" Width="7" Height="239" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type1">
+    <HorizontalRectangle Nval="66" Xpos="516.191" Ypos="532.285" Width="173" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="58" Xpos="515.12" Ypos="533.619" Width="7" Height="160" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="66" Xpos="516.191" Ypos="532.285" Width="173" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="60" Xpos="682.453" Ypos="534.618" Width="7" Height="160" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type1">
+    <HorizontalRectangle Nval="66" Xpos="516.191" Ypos="532.285" Width="173" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="58" Xpos="515.12" Ypos="533.619" Width="7" Height="160" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="66" Xpos="516.191" Ypos="532.285" Width="173" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="60" Xpos="682.453" Ypos="534.618" Width="7" Height="160" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="231" Xpos="715.333" Ypos="373.367" Width="987" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="199" Xpos="1512.12" Ypos="377.285" Width="7" Height="147" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="231" Xpos="715.333" Ypos="373.367" Width="987" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="199" Xpos="1512.12" Ypos="377.285" Width="7" Height="147" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="56" Xpos="237" Ypos="175" Width="356" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="38" Xpos="237.095" Ypos="177.952" Width="7" Height="451" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="56" Xpos="237" Ypos="175" Width="356" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="40" Xpos="407.162" Ypos="176.819" Width="7" Height="239" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="56" Xpos="237" Ypos="175" Width="356" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="38" Xpos="237.095" Ypos="177.952" Width="7" Height="451" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="56" Xpos="237" Ypos="175" Width="356" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="40" Xpos="407.162" Ypos="176.819" Width="7" Height="239" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type1">
+    <HorizontalRectangle Nval="66" Xpos="516.191" Ypos="532.285" Width="173" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="58" Xpos="515.12" Ypos="533.619" Width="7" Height="160" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="66" Xpos="516.191" Ypos="532.285" Width="173" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="60" Xpos="682.453" Ypos="534.618" Width="7" Height="160" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type1">
+    <HorizontalRectangle Nval="66" Xpos="516.191" Ypos="532.285" Width="173" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="58" Xpos="515.12" Ypos="533.619" Width="7" Height="160" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="66" Xpos="516.191" Ypos="532.285" Width="173" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="60" Xpos="682.453" Ypos="534.618" Width="7" Height="160" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="231" Xpos="715.333" Ypos="373.367" Width="987" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="199" Xpos="1512.12" Ypos="377.285" Width="7" Height="147" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+  <IntersectingRectangles IntersectionType="Type3">
+    <HorizontalRectangle Nval="231" Xpos="715.333" Ypos="373.367" Width="987" Height="7" shape="rectangle" isHorizontal="true" />
+    <VerticalRectangle Nval="199" Xpos="1512.12" Ypos="377.285" Width="7" Height="147" shape="rectangle" isHorizontal="false" />
+  </IntersectingRectangles>
+</Rectangles>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Lines>
+  <IntersectingLines IntersectionType="Type1">
+    <HorizontalLine Nval="802" Xpos="1005.5" Ypos="771" Width="40" Height="0" shape="line" isHorizontal="true" />
+    <VerticalLine Nval="825" Xpos="1002" Ypos="766.5" Width="0" Height="17" shape="line" isHorizontal="false" />
+  </IntersectingLines>
+  <IntersectingLines IntersectionType="Type1">
+    <HorizontalLine Nval="802" Xpos="1005.5" Ypos="771" Width="40" Height="0" shape="line" isHorizontal="true" />
+    <VerticalLine Nval="825" Xpos="1002" Ypos="766.5" Width="0" Height="17" shape="line" isHorizontal="false" />
+  </IntersectingLines>
+  <IntersectingLines IntersectionType="Type1">
+    <HorizontalLine Nval="802" Xpos="1005.5" Ypos="771" Width="40" Height="0" shape="line" isHorizontal="true" />
+    <VerticalLine Nval="825" Xpos="1002" Ypos="766.5" Width="0" Height="17" shape="line" isHorizontal="false" />
+  </IntersectingLines>
+  <IntersectingLines IntersectionType="Type1">
+    <HorizontalLine Nval="802" Xpos="1005.5" Ypos="771" Width="40" Height="0" shape="line" isHorizontal="true" />
+    <VerticalLine Nval="825" Xpos="1002" Ypos="766.5" Width="0" Height="17" shape="line" isHorizontal="false" />
+  </IntersectingLines>
+</Lines>
