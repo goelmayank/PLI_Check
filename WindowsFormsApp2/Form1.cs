@@ -22,13 +22,13 @@ namespace WindowsFormsApp2
             public string shape;
             public bool isHorizontal;
         }
-        private static string path = "../../../Database/";
-        private static string targetPath = path+"test/";
-        private string testFile = "test.UCBG";
-        private string linesXml = "IntersectingLines.xml";
-        private string RectanglesXml = "IntersectingRectangles.xml";
-        private XDocument LinesDoc = XDocument.Load(path + "IntersectingLines.xml");
-        private XDocument RectanglesDoc = XDocument.Load(path + "IntersectingRectangles.xml");
+        private static string path;
+        private static string targetPath;
+        private string testFile;
+        private string linesXmlPath;
+        private string rectanglesXmlPath;
+        private XDocument LinesDoc;
+        private XDocument RectanglesDoc;
         
         private static List<FigureDimension> LineDimensions = null;
         private static List<FigureDimension> RectangleDimensions = null;
@@ -75,11 +75,17 @@ namespace WindowsFormsApp2
             else
             {
                 hasClickedCheck = true;
-                string[] files = Directory.GetFiles(path, "*.ucbg");
+                string[] files = Directory.GetFiles(parentDirectoryInput.Text, "*.ucbg");
+                linesXmlPath = Path.Combine(targetDirectoryInput.Text, "IntersectingLines.xml");
+                rectanglesXmlPath = Path.Combine(targetDirectoryInput.Text, "IntersectingRectangles.xml");
+                LinesDoc = new XDocument(new XElement("Lines"));
+                RectanglesDoc = new XDocument(new XElement("Rectangles"));
                 foreach (var file in files)
                 {
-                    testFile = file.Split('/').LastOrDefault();
-                    File.Copy(file, targetPath+ testFile, true);
+                    testFile = Path.GetFileName(file);
+                    path = Path.Combine(parentDirectoryInput.Text, testFile);
+                    targetPath = Path.Combine(targetDirectoryInput.Text, testFile);
+                    File.Copy(file, targetPath, true);
                     findObjects();
                     findIntersectingLines();
                     findIntersectingRectangles();
@@ -90,14 +96,13 @@ namespace WindowsFormsApp2
 
             }
         }
-
         private void findObjects()
         {
             FigureDimension fd = null;
             LineDimensions = new List<FigureDimension>();
             RectangleDimensions = new List<FigureDimension>();
 
-            using (var mappedFile1 = MemoryMappedFile.CreateFromFile(path + testFile))
+            using (var mappedFile1 = MemoryMappedFile.CreateFromFile(path))
             {
                 using (Stream mmStream = mappedFile1.CreateViewStream())
                 {
@@ -188,7 +193,7 @@ namespace WindowsFormsApp2
         private void findIntersectingLines()
         {
             LinesDoc.Descendants("Lines").FirstOrDefault().RemoveAll();
-            LinesDoc.Save(path + linesXml);
+            LinesDoc.Save(linesXmlPath);
 
             //INTERSECTION LOGIC FOR LINES
             foreach (var f1 in LineDimensions.FindAll(i => i.isHorizontal == true))
@@ -249,7 +254,7 @@ namespace WindowsFormsApp2
         private void findIntersectingRectangles()
         {
             RectanglesDoc.Descendants("Rectangles").FirstOrDefault().RemoveAll();
-            RectanglesDoc.Save(path + RectanglesXml);
+            RectanglesDoc.Save(rectanglesXmlPath);
 
             //INTERSECTION LOGIC FOR RECTANGLES
             foreach (var f1 in RectangleDimensions.FindAll(i => i.isHorizontal == true))
@@ -332,7 +337,7 @@ namespace WindowsFormsApp2
                 )
             ));
 
-            LinesDoc.Save(path + linesXml);
+            LinesDoc.Save(linesXmlPath);
             Nval += 2; LineCount++;
             if (LineCount == 1 && LineCount > RectangleCount)
                 StartingNValueForCircle = Nval;
@@ -363,7 +368,7 @@ namespace WindowsFormsApp2
                 )
             ));
 
-            RectanglesDoc.Save(path + RectanglesXml);
+            RectanglesDoc.Save(rectanglesXmlPath);
             Nval += 2; RectangleCount++;
             if (RectangleCount == 1 && RectangleCount > LineCount)
                 StartingNValueForCircle = Nval;
@@ -372,7 +377,7 @@ namespace WindowsFormsApp2
         private void MarkWithACircle(double xpos, double ypos , string shape)
         {
             StringBuilder sb = new StringBuilder();
-            using (StreamWriter w = File.AppendText(targetPath + testFile))
+            using (StreamWriter w = File.AppendText(targetPath))
             {
                 sb.AppendLine("N " + Nval);
                 sb.AppendLine("P " + (xpos - 13) + " " + (ypos - 13));
@@ -402,7 +407,7 @@ namespace WindowsFormsApp2
             if(hasClickedCheck == true)
             {
                 StringBuilder sb = new StringBuilder();
-                using (var mappedFile1 = MemoryMappedFile.CreateFromFile(targetPath + testFile))
+                using (var mappedFile1 = MemoryMappedFile.CreateFromFile(targetPath))
                 {
                     using (Stream mmStream = mappedFile1.CreateViewStream())
                     {
@@ -425,7 +430,7 @@ namespace WindowsFormsApp2
                     }
                 }
 
-                File.WriteAllText(targetPath + testFile, sb.ToString());
+                File.WriteAllText(targetPath, sb.ToString());
                 MessageBox.Show("Removed all circles");
             }
             else
@@ -440,7 +445,6 @@ namespace WindowsFormsApp2
             // This is what will execute if the user selects a folder and hits OK (File if you change to FileBrowserDialog)
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                path = dlg.SelectedPath;
                 parentDirectoryInput.Text = dlg.SelectedPath;
             }
             else
@@ -455,7 +459,6 @@ namespace WindowsFormsApp2
             // This is what will execute if the user selects a folder and hits OK (File if you change to FileBrowserDialog)
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                targetPath = dlg.SelectedPath;
                 targetDirectoryInput.Text = dlg.SelectedPath;
             }
             else
