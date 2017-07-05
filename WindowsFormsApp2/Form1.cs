@@ -14,7 +14,7 @@ namespace WindowsFormsApp2
     {
         public class FigureDimension
         {
-            public int Nval;
+            public int nVal;
             public double Xpos;
             public double Ypos;
             public double width;
@@ -27,35 +27,35 @@ namespace WindowsFormsApp2
         private string testFile;
         private string linesXmlPath;
         private string rectanglesXmlPath;
-        private XDocument LinesDoc;
-        private XDocument RectanglesDoc;
+        private XDocument linesDoc;
+        private XDocument rectanglesDoc;
         
         private static List<FigureDimension> LineDimensions = null;
         private static List<FigureDimension> RectangleDimensions = null;
-        private int Nval;
+        private int nVal;
         private double width;
         private double height;
-        private int LineCount= 0;
-        private int RectangleCount = 0;
-        private int StartingNValueForCircle;
-        private int EndingNValueForCircle;
-        private bool stopAddingToBuffer=false;
-        private double Xdiff;
-        private double Ydiff;
-        private double XPlusWidth;
-        private double YPlusHeight;
-        private double XPlusWidthdiff;
-        private double YPlusHeightdiff;
-        private bool isXintersecting;
-        private bool isYintersecting;
+        private int intersectingLinesCount;
+        private int intersectingRectanglesCount;
+        private int startingNValueForCircle;
+        private int endingNValueForCircle;
+        private bool stopAddingToBuffer;
+        private double xDiff;
+        private double yDiff;
+        private double xPlusWidth;
+        private double yPlusHeight;
+        private double xPlusWidthdiff;
+        private double yPlusHeightdiff;
+        private bool isXIntersecting;
+        private bool isYIntersecting;
         private bool isXPlusWidthIntersecting;
         private bool isYPlusHeightIntersecting;
         private bool isXInBetween;
         private bool isYInBetween;
-        private bool isXintersectingFromClose;
-        private bool isYintersectingFromClose;
-        private bool isXPlusWidthintersectingFromClose;
-        private bool isYPlusHeightintersectingFromClose;
+        private bool isXIntersectingFromClose;
+        private bool isYIntersectingFromClose;
+        private bool isXPlusWidthIntersectingFromClose;
+        private bool isYPlusHeightIntersectingFromClose;
         private bool hasClickedCheck = false;
         private string specifiedDimension;
         public Form1()
@@ -74,12 +74,8 @@ namespace WindowsFormsApp2
                 MessageBox.Show("Please specify the pipe dimension used in the project");
             else
             {
-                hasClickedCheck = true;
+                InitializeClassVariables();
                 string[] files = Directory.GetFiles(parentDirectoryInput.Text, "*.ucbg");
-                linesXmlPath = Path.Combine(targetDirectoryInput.Text, "IntersectingLines.xml");
-                rectanglesXmlPath = Path.Combine(targetDirectoryInput.Text, "IntersectingRectangles.xml");
-                LinesDoc = new XDocument(new XElement("Lines"));
-                RectanglesDoc = new XDocument(new XElement("Rectangles"));
                 foreach (var file in files)
                 {
                     testFile = Path.GetFileName(file);
@@ -89,12 +85,23 @@ namespace WindowsFormsApp2
                     findObjects();
                     findIntersectingLines();
                     findIntersectingRectangles();
-                    EndingNValueForCircle = Nval;
-                    MessageBox.Show("Found " + LineCount + " intersecting lines in "+ testFile);
-                    MessageBox.Show("Found " + RectangleCount + " intersecting rectangles in "+ testFile);
+                    endingNValueForCircle = nVal;
+                    MessageBox.Show("Found " + intersectingLinesCount + " intersecting lines in "+ testFile);
+                    MessageBox.Show("Found " + intersectingRectanglesCount + " intersecting rectangles in "+ testFile);
                 }
 
             }
+        }
+        private void InitializeClassVariables()
+        {
+            intersectingLinesCount = 0;
+            intersectingRectanglesCount = 0;
+            stopAddingToBuffer = false;
+            hasClickedCheck = true;
+            linesXmlPath = Path.Combine(targetDirectoryInput.Text, "IntersectingLines.xml");
+            rectanglesXmlPath = Path.Combine(targetDirectoryInput.Text, "IntersectingRectangles.xml");
+            linesDoc = new XDocument(new XElement("Lines"));
+            rectanglesDoc = new XDocument(new XElement("Rectangles"));
         }
         private void findObjects()
         {
@@ -120,7 +127,7 @@ namespace WindowsFormsApp2
                                     else if (fd.shape == "rectangle") RectangleDimensions.Add(fd);
                                 }
                                 fd = new FigureDimension();
-                                fd.Nval = Nval = int.Parse(lineWords[1]);
+                                fd.nVal = nVal = int.Parse(lineWords[1]);
 
                             }
                             if (lineWords[0] == "P")
@@ -192,46 +199,47 @@ namespace WindowsFormsApp2
         }
         private void findIntersectingLines()
         {
-            LinesDoc.Descendants("Lines").FirstOrDefault().RemoveAll();
-            LinesDoc.Save(linesXmlPath);
+            linesDoc.Descendants("Lines").FirstOrDefault().RemoveAll();
+            linesDoc.Save(linesXmlPath);
 
             //INTERSECTION LOGIC FOR LINES
             foreach (var f1 in LineDimensions.FindAll(i => i.isHorizontal == true))
             {
-                XPlusWidth = f1.Xpos + f1.width;
+                xPlusWidth = f1.Xpos + f1.width;
                 foreach (var f2 in LineDimensions.FindAll(i => i.isHorizontal == false))
                 {
-                    Xdiff = f1.Xpos - f2.Xpos;
-                    Ydiff = f1.Ypos - f2.Ypos;
-                    XPlusWidthdiff = XPlusWidth - f2.Xpos;
-                    YPlusHeightdiff = YPlusHeight - f2.Xpos;
-                    isXintersecting = Math.Abs(Xdiff) > 1 && Math.Abs(Xdiff) < 5;
-                    isXPlusWidthIntersecting = Math.Abs(XPlusWidthdiff) > 1 && Math.Abs(XPlusWidthdiff) < 5;
-                    isYintersecting = Math.Abs(Ydiff) > 1 && Math.Abs(Ydiff) < 5;
-                    isYPlusHeightIntersecting = Math.Abs(YPlusHeightdiff) > 1 && Math.Abs(YPlusHeightdiff) < 5;
-                    isXInBetween = f2.Xpos > f1.Xpos && f2.Xpos < XPlusWidth;
-                    isYInBetween = f2.Ypos > f1.Ypos && f2.Ypos < YPlusHeight;
-                    isXintersectingFromClose = Math.Abs(Xdiff) < 5;
-                    isYintersectingFromClose = Math.Abs(Ydiff) < 5;
-                    isXPlusWidthintersectingFromClose = Math.Abs(XPlusWidthdiff) < 5;
-                    isYPlusHeightintersectingFromClose = Math.Abs(YPlusHeightdiff) < 5;
-                    if (isXintersecting && isYintersectingFromClose || isXintersectingFromClose && isYintersecting)
+                    xDiff = f1.Xpos - f2.Xpos;
+                    yDiff = f1.Ypos - f2.Ypos;
+                    yPlusHeight = f2.Ypos + f2.height;
+                    xPlusWidthdiff = xPlusWidth - f2.Xpos;
+                    yPlusHeightdiff = yPlusHeight - f1.Ypos;
+                    isXIntersecting = Math.Abs(xDiff) > 1 && Math.Abs(xDiff) < 5;
+                    isXPlusWidthIntersecting = Math.Abs(xPlusWidthdiff) > 1 && Math.Abs(xPlusWidthdiff) < 5;
+                    isYIntersecting = Math.Abs(yDiff) > 1 && Math.Abs(yDiff) < 5;
+                    isYPlusHeightIntersecting = Math.Abs(yPlusHeightdiff) > 1 && Math.Abs(yPlusHeightdiff) < 5;
+                    isXInBetween = f2.Xpos > f1.Xpos && f2.Xpos < xPlusWidth;
+                    isYInBetween = f2.Ypos > f1.Ypos && f2.Ypos < yPlusHeight;
+                    isXIntersectingFromClose = Math.Abs(xDiff) < 5;
+                    isYIntersectingFromClose = Math.Abs(yDiff) < 5;
+                    isXPlusWidthIntersectingFromClose = Math.Abs(xPlusWidthdiff) < 5;
+                    isYPlusHeightIntersectingFromClose = Math.Abs(yPlusHeightdiff) < 5;
+                    if (isXIntersecting && isYIntersectingFromClose || isXIntersectingFromClose && isYIntersecting)
                     {
                         foundIntersectingLines("Top left", f1, f2);
                     }
-                    else if (isXPlusWidthIntersecting && isYintersectingFromClose || isXPlusWidthintersectingFromClose && isYintersecting)
+                    else if (isXPlusWidthIntersecting && isYIntersectingFromClose || isXPlusWidthIntersectingFromClose && isYIntersecting)
                     {
                         foundIntersectingLines("Top Right", f1, f2);
                     }
-                    else if (isXintersecting && isYPlusHeightintersectingFromClose || isXintersectingFromClose && isYPlusHeightIntersecting)
+                    else if (isXIntersecting && isYPlusHeightIntersectingFromClose || isXIntersectingFromClose && isYPlusHeightIntersecting)
                     {
                         foundIntersectingLines("Bottom left", f1, f2);
                     }
-                    else if (isXPlusWidthIntersecting && isYPlusHeightintersectingFromClose || isXPlusWidthintersectingFromClose && isYPlusHeightIntersecting)
+                    else if (isXPlusWidthIntersecting && isYPlusHeightIntersectingFromClose || isXPlusWidthIntersectingFromClose && isYPlusHeightIntersecting)
                     {
                         foundIntersectingLines("Bottom Right", f1, f2);
                     }
-                    else if (isXInBetween && isYintersecting)
+                    else if (isXInBetween && isYIntersecting)
                     {
                         foundIntersectingLines("T type", f1, f2);
                     }
@@ -239,7 +247,7 @@ namespace WindowsFormsApp2
                     {
                         foundIntersectingLines("Inverted T type", f1, f2);
                     }
-                    else if (isXintersecting && isYInBetween)
+                    else if (isXIntersecting && isYInBetween)
                     {
                         foundIntersectingLines("Left Side T type", f1, f2);
                     }
@@ -253,47 +261,47 @@ namespace WindowsFormsApp2
 
         private void findIntersectingRectangles()
         {
-            RectanglesDoc.Descendants("Rectangles").FirstOrDefault().RemoveAll();
-            RectanglesDoc.Save(rectanglesXmlPath);
+            rectanglesDoc.Descendants("Rectangles").FirstOrDefault().RemoveAll();
+            rectanglesDoc.Save(rectanglesXmlPath);
 
             //INTERSECTION LOGIC FOR RECTANGLES
             foreach (var f1 in RectangleDimensions.FindAll(i => i.isHorizontal == true))
             {
-                XPlusWidth = f1.Xpos + f1.width;
-                YPlusHeight = f1.Xpos + f1.width;
+                xPlusWidth = f1.Xpos + f1.width;
                 foreach (var f2 in RectangleDimensions.FindAll(i => i.isHorizontal == false))
                 {
-                    Xdiff = f1.Xpos - f2.Xpos;
-                    Ydiff = f1.Ypos - f2.Ypos;
-                    XPlusWidthdiff = XPlusWidth - f2.Xpos;
-                    YPlusHeightdiff = YPlusHeight - f2.Xpos;
-                    isXintersecting = Math.Abs(Xdiff) > 1 && Math.Abs(Xdiff) < 5;
-                    isXPlusWidthIntersecting = Math.Abs(XPlusWidthdiff) > 1 && Math.Abs(XPlusWidthdiff) < 5;
-                    isYintersecting = Math.Abs(Ydiff) > 1 && Math.Abs(Ydiff) < 5;
-                    isYPlusHeightIntersecting = Math.Abs(YPlusHeightdiff) > 1 && Math.Abs(YPlusHeightdiff) < 5;
-                    isXInBetween = f2.Xpos > f1.Xpos && f2.Xpos < XPlusWidth;
-                    isYInBetween = f2.Ypos > f1.Ypos && f2.Ypos < YPlusHeight;
-                    isXintersectingFromClose = Math.Abs(Xdiff) < 5;
-                    isYintersectingFromClose = Math.Abs(Ydiff) < 5;
-                    isXPlusWidthintersectingFromClose = Math.Abs(XPlusWidthdiff) < 5;
-                    isYPlusHeightintersectingFromClose = Math.Abs(YPlusHeightdiff) < 5;
-                    if (isXintersecting && isYintersectingFromClose || isXintersectingFromClose && isYintersecting)
+                    xDiff = f1.Xpos - f2.Xpos;
+                    yDiff = f1.Ypos - f2.Ypos;
+                    yPlusHeight = f2.Ypos + f2.height;
+                    xPlusWidthdiff = xPlusWidth - f2.Xpos;
+                    yPlusHeightdiff = yPlusHeight - f1.Ypos;
+                    isXIntersecting = Math.Abs(xDiff) > 1 && Math.Abs(xDiff) < 5;
+                    isXPlusWidthIntersecting = Math.Abs(xPlusWidthdiff) > 1 && Math.Abs(xPlusWidthdiff) < 5;
+                    isYIntersecting = Math.Abs(yDiff) > 1 && Math.Abs(yDiff) < 5;
+                    isYPlusHeightIntersecting = Math.Abs(yPlusHeightdiff) > 1 && Math.Abs(yPlusHeightdiff) < 5;
+                    isXInBetween = f2.Xpos > f1.Xpos && f2.Xpos < xPlusWidth;
+                    isYInBetween = f2.Ypos > f1.Ypos && f2.Ypos < yPlusHeight;
+                    isXIntersectingFromClose = Math.Abs(xDiff) < 5;
+                    isYIntersectingFromClose = Math.Abs(yDiff) < 5;
+                    isXPlusWidthIntersectingFromClose = Math.Abs(xPlusWidthdiff) < 5;
+                    isYPlusHeightIntersectingFromClose = Math.Abs(yPlusHeightdiff) < 5;
+                    if (isXIntersecting && isYIntersectingFromClose || isXIntersectingFromClose && isYIntersecting)
                     {
                         foundIntersectingRectangles("Top left", f1, f2);
                     }
-                    else if (isXPlusWidthIntersecting && isYintersectingFromClose || isXPlusWidthintersectingFromClose && isYintersecting)
+                    else if (isXPlusWidthIntersecting && isYIntersectingFromClose || isXPlusWidthIntersectingFromClose && isYIntersecting)
                     {
                         foundIntersectingRectangles("Top Right", f1, f2);
                     }
-                    else if (isXintersecting && isYPlusHeightintersectingFromClose || isXintersectingFromClose && isYPlusHeightIntersecting)
+                    else if (isXIntersecting && isYPlusHeightIntersectingFromClose || isXIntersectingFromClose && isYPlusHeightIntersecting)
                     {
                         foundIntersectingRectangles("Bottom left", f1, f2);
                     }
-                    else if (isXPlusWidthIntersecting && isYPlusHeightintersectingFromClose || isXPlusWidthintersectingFromClose && isYPlusHeightIntersecting)
+                    else if (isXPlusWidthIntersecting && isYPlusHeightIntersectingFromClose || isXPlusWidthIntersectingFromClose && isYPlusHeightIntersecting)
                     {
                         foundIntersectingRectangles("Bottom Right", f1, f2);
                     }
-                    else if (isXInBetween && isYintersecting)
+                    else if (isXInBetween && isYIntersecting)
                     {
                         foundIntersectingRectangles("T type", f1, f2);
                     }
@@ -301,7 +309,7 @@ namespace WindowsFormsApp2
                     {
                         foundIntersectingRectangles("Inverted T type", f1, f2);
                     }
-                    else if (isXintersecting && isYInBetween)
+                    else if (isXIntersecting && isYInBetween)
                     {
                         foundIntersectingRectangles("Left Side T type", f1, f2);
                     }
@@ -315,10 +323,10 @@ namespace WindowsFormsApp2
 
         private void foundIntersectingLines(string IntersectionType, FigureDimension Hfd, FigureDimension Vfd)
         {
-            LinesDoc.Descendants("Lines").FirstOrDefault().Add(new XElement("IntersectingLines",
+            linesDoc.Descendants("Lines").FirstOrDefault().Add(new XElement("IntersectingLines",
                 new XAttribute("IntersectionType", IntersectionType),
                 new XElement("HorizontalLine",
-                    new XAttribute("Nval", Hfd.Nval),
+                    new XAttribute("nVal", Hfd.nVal),
                     new XAttribute("Xpos", Hfd.Xpos),
                     new XAttribute("Ypos", Hfd.Ypos),
                     new XAttribute("Width", Hfd.width),
@@ -327,7 +335,7 @@ namespace WindowsFormsApp2
                     new XAttribute("isHorizontal", Hfd.isHorizontal)
                 ),
                 new XElement("VerticalLine",
-                    new XAttribute("Nval", Vfd.Nval),
+                    new XAttribute("nVal", Vfd.nVal),
                     new XAttribute("Xpos", Vfd.Xpos),
                     new XAttribute("Ypos", Vfd.Ypos),
                     new XAttribute("Width", Vfd.width),
@@ -337,19 +345,19 @@ namespace WindowsFormsApp2
                 )
             ));
 
-            LinesDoc.Save(linesXmlPath);
-            Nval += 2; LineCount++;
-            if (LineCount == 1 && LineCount > RectangleCount)
-                StartingNValueForCircle = Nval;
+            linesDoc.Save(linesXmlPath);
+            nVal += 2; intersectingLinesCount++;
+            if (intersectingLinesCount == 1 && intersectingLinesCount > intersectingRectanglesCount)
+                startingNValueForCircle = nVal;
             MarkWithACircle(Vfd.Xpos, Vfd.Ypos, Vfd.shape);
         }
 
         private void foundIntersectingRectangles(string IntersectionType, FigureDimension Hfd, FigureDimension Vfd)
         {
-            RectanglesDoc.Descendants("Rectangles").FirstOrDefault().Add(new XElement("IntersectingRectangles",
+            rectanglesDoc.Descendants("Rectangles").FirstOrDefault().Add(new XElement("IntersectingRectangles",
                 new XAttribute("IntersectionType", IntersectionType),
                 new XElement("HorizontalRectangle",
-                    new XAttribute("Nval", Hfd.Nval),
+                    new XAttribute("nVal", Hfd.nVal),
                     new XAttribute("Xpos", Hfd.Xpos),
                     new XAttribute("Ypos", Hfd.Ypos),
                     new XAttribute("Width", Hfd.width),
@@ -358,7 +366,7 @@ namespace WindowsFormsApp2
                     new XAttribute("isHorizontal", Hfd.isHorizontal)
                 ),
                 new XElement("VerticalRectangle",
-                    new XAttribute("Nval", Vfd.Nval),
+                    new XAttribute("nVal", Vfd.nVal),
                     new XAttribute("Xpos", Vfd.Xpos),
                     new XAttribute("Ypos", Vfd.Ypos),
                     new XAttribute("Width", Vfd.width),
@@ -368,10 +376,10 @@ namespace WindowsFormsApp2
                 )
             ));
 
-            RectanglesDoc.Save(rectanglesXmlPath);
-            Nval += 2; RectangleCount++;
-            if (RectangleCount == 1 && RectangleCount > LineCount)
-                StartingNValueForCircle = Nval;
+            rectanglesDoc.Save(rectanglesXmlPath);
+            nVal += 2; intersectingRectanglesCount++;
+            if (intersectingRectanglesCount == 1 && intersectingRectanglesCount > intersectingLinesCount)
+                startingNValueForCircle = nVal;
             MarkWithACircle(Vfd.Xpos, Vfd.Ypos, Vfd.shape);
         }
         private void MarkWithACircle(double xpos, double ypos , string shape)
@@ -379,13 +387,13 @@ namespace WindowsFormsApp2
             StringBuilder sb = new StringBuilder();
             using (StreamWriter w = File.AppendText(targetPath))
             {
-                sb.AppendLine("N " + Nval);
+                sb.AppendLine("N " + nVal);
                 sb.AppendLine("P " + (xpos - 13) + " " + (ypos - 13));
                 sb.AppendLine("T - 1");
                 sb.AppendLine("R 0 0");
                 sb.AppendLine("0");
                 sb.AppendLine("\t0 5 7 0");
-                sb.AppendLine("\t Name C"+((shape=="line")?"L"+LineCount:"R"+RectangleCount));
+                sb.AppendLine("\t Name C"+((shape=="line")?"L"+intersectingLinesCount:"R"+intersectingRectanglesCount));
                 sb.AppendLine("\t0 1 1");
                 sb.AppendLine("!");
                 sb.AppendLine("2fe");
@@ -417,7 +425,7 @@ namespace WindowsFormsApp2
                             {
                                 var line = sr.ReadLine();
                                 var lineWords = line.Split(' ');
-                                if (lineWords[0] == "N" && Regex.IsMatch(lineWords[1], @"^\d+$") && int.Parse(lineWords[1]) >= StartingNValueForCircle)
+                                if (lineWords[0] == "N" && Regex.IsMatch(lineWords[1], @"^\d+$") && int.Parse(lineWords[1]) >= startingNValueForCircle)
                                 {
                                     stopAddingToBuffer = true;
                                 }

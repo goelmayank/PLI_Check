@@ -1,0 +1,124 @@
+L3.3
+
+resizeText 1
+zoomLines 0
+zoomArrows 0
+doLasso 1
+opaqueMove 1
+selectDistance 30
+adjustFonts 1
+doubleBuffer 1
+clipping 1
+nCopyAreas 0
+drawTextLimit 0.5
+saveObjects 1
+canvasBackground #a000a0008000
+defaultForeground #000000000000
+layers 1
+layerName 0 0
+layerName 1 1
+layerName 2 2
+layerName 3 3
+layerName 4 4
+layerName 5 5
+layerName 6 6
+layerName 7 7
+layerName 8 8
+layerName 9 9
+layerName 10 10
+layerName 11 11
+layerName 12 12
+layerName 13 13
+layerName 14 14
+layerName 15 15
+layerName 16 16
+layerName 17 17
+layerName 18 18
+layerName 19 19
+layerName 20 20
+layerName 21 21
+layerName 22 22
+layerName 23 23
+layerName 24 24
+layerName 25 25
+layerName 26 26
+layerName 27 27
+layerName 28 28
+layerName 29 29
+layerName 30 30
+layerName 31 31
+gend
+
+N 1
+P 262 576
+T -1
+R 0 0
+0
+	0 0 1567 0
+	Name L1
+	0 1 1
+!
+27e
+a0-100
+000000
+1
+0
+0
+0 0
+	0 0 0
+	0 0 0 0 1 
+	2
+	0 0
+	254 0
+N 2
+P 514 484
+T -1
+R 0 0
+0
+	0 0 1569 0
+	Name L2
+	0 1 1
+!
+=
+	0 0 0
+	0 0 0 0 1 
+	2
+	0 0
+	0 92
+
+N 3
+P 738 451
+T -1
+R 0 0
+0
+	0 0 1789 0
+	Name L3
+	0 1 1
+!
+27e
+a0-100
+000000
+2
+0
+0
+0 0
+	0 0 0
+	0 0 0 0 1 
+	2
+	0 0
+	0 45
+N 4
+P 738 454
+T -1
+R 0 0
+0
+	0 0 1795 0
+	Name L4
+	0 1 1
+!
+=
+	0 0 0
+	0 0 0 0 1 
+	2
+	0 0
+	96 0
