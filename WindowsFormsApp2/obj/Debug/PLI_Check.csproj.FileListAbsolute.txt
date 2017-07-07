@@ -1,0 +1,9 @@
+C:\Users\INMAGOE1\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\bin\Debug\PLI_Check.exe.config
+C:\Users\INMAGOE1\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\bin\Debug\PLI_Check.exe
+C:\Users\INMAGOE1\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\bin\Debug\PLI_Check.pdb
+C:\Users\INMAGOE1\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\obj\Debug\PLI_Check.csprojResolveAssemblyReference.cache
+C:\Users\INMAGOE1\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.MainForm.resources
+C:\Users\INMAGOE1\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\obj\Debug\PLI_Check.Properties.Resources.resources
+C:\Users\INMAGOE1\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\obj\Debug\PLI_Check.csproj.GenerateResource.Cache
+C:\Users\INMAGOE1\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\obj\Debug\PLI_Check.exe
+C:\Users\INMAGOE1\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\obj\Debug\PLI_Check.pdb

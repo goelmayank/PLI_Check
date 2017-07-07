@@ -12,8 +12,8 @@ clipping 1
 nCopyAreas 0
 drawTextLimit 0.5
 saveObjects 1
-canvasBackground #a000a0008000
-defaultForeground #000000000000
+canvasBackground #c000c000c000
+defaultForeground #e600e600e600
 layers 1
 layerName 0 0
 layerName 1 1
@@ -49,76 +49,66 @@ layerName 30 30
 layerName 31 31
 gend
 
-N 1
-P 262 576
+N 0
+P 80 500
 T -1
 R 0 0
 0
-	0 0 1567 0
-	Name L1
+	0 6 1 0
 	0 1 1
 !
 27e
-a0-100
-000000
-1
-0
-0
-0 0
-	0 0 0
-	0 0 0 0 1 
-	2
-	0 0
-	254 0
-N 2
-P 514 484
-T -1
-R 0 0
-0
-	0 0 1569 0
-	Name L2
-	0 1 1
-!
-=
-	0 0 0
-	0 0 0 0 1 
-	2
-	0 0
-	0 92
-
-N 3
-P 738 451
-T -1
-R 0 0
-0
-	0 0 1789 0
-	Name L3
-	0 1 1
-!
-27e
-a0-100
-000000
+00-1-1
+c0c0c0
 2
 0
 0
 0 0
-	0 0 0
-	0 0 0 0 1 
 	2
+	0 25
 	0 0
-	0 45
-N 4
-P 738 454
+N 2
+P 2120 745
 T -1
 R 0 0
 0
-	0 0 1795 0
-	Name L4
+	1 1 3 0
+	0 1 1
+!
+346
+000000
+e6e6e6
+0 0
+-*-Arial-bold-r-normal-*-20-*-*-p-*-iso8859-1-
+	0 0 0
+	BKR-20104C
+N 4
+P 1430 495
+T -1
+R 0 0
+0
+	0 6 5 0
+	0 1 1
+!
+27e
+00-1-1
+c0c0c0
+2
+0
+0
+0 0
+	2
+	0 95
+	0 0
+N 6
+P 415 50
+T -1
+R 0 0
+0
+	0 6 7 0
 	0 1 1
 !
 =
-	0 0 0
-	0 0 0 0 1 
 	2
+	0 85
 	0 0
-	96 0
