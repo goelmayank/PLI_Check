@@ -148,6 +148,10 @@ namespace WindowsFormsApp2
                                     else if (fd.shape == "pipe") PipeDimensions.Add(fd);
                                 }
                                 File.AppendAllText(targetPath, sb.ToString());
+                                if (lineWords[0] == "P")
+                                {
+
+                                }
                                 sb = new StringBuilder();
                                 fd = new FigureDimension();
                                 fd.nVal = nVal = int.Parse(lineWords[1]);
@@ -261,7 +265,7 @@ namespace WindowsFormsApp2
                             }
                             else if (fd.shape == "pipe") PipeDimensions.Add(fd);
                         }
-                        File.AppendAllText(targetPath, sb.ToString());
+                        //File.AppendAllText(targetPath, sb.ToString());
                     }
                 }
             }
@@ -372,19 +376,22 @@ namespace WindowsFormsApp2
                 sb.AppendLine("R 0 0");
                 sb.AppendLine("0");
                 sb.AppendLine("\t0 5 7 0");
-                sb.AppendLine("\t Name C"+count);
+                sb.AppendLine("\t Name TEST_C" + count);
                 sb.AppendLine("\t0 1 1");
                 sb.AppendLine("!");
-                sb.AppendLine("2fe");
+                sb.AppendLine("ffffffff");
+                sb.AppendLine("0");
                 sb.AppendLine("-10000");
-                sb.AppendLine("283e3e");
+                sb.AppendLine("c0c0c0");
                 sb.AppendLine("0");
                 sb.AppendLine("0");
                 sb.AppendLine("0");
                 sb.AppendLine("0 0");
                 sb.AppendLine("1");
+                sb.AppendLine("\tDefault");
                 sb.AppendLine("\t0 0 26 26");
                 sb.AppendLine("0 23040");
+
                 w.WriteLine(sb.ToString());
             }
         }
