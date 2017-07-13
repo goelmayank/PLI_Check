@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.MemoryMappedFiles;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace WindowsFormsApp2
 {
@@ -21,7 +19,11 @@ namespace WindowsFormsApp2
             public int height;
             public string shape;
             public bool isHorizontal;
-            //public bool nameIsSet;
+        }
+        public class UCBG_File
+        {
+            public string name;
+            public int startingNValueForCircle;
         }
         private static string path;
         private static string targetPath;
@@ -29,12 +31,13 @@ namespace WindowsFormsApp2
         
         private static List<FigureDimension> LineDimensions = null;
         private static List<FigureDimension> PipeDimensions = null;
+        private static List<UCBG_File> ucbg_files = null;
+        private UCBG_File ucbg_file;
         private int nVal;
         private int width;
         private int height;
         private int intersectingLinesCount;
         private int intersectingPipesCount;
-        private int startingNValueForCircle;
         private bool stopAddingToBuffer;
         private int xDiff;
         private int yDiff;
@@ -54,9 +57,6 @@ namespace WindowsFormsApp2
         private bool isYPlusHeightIntersectingFromClose;
         private bool hasClickedCheck = false;
         private string pipeDimension;
-        private int lineWidth;
-        //private bool nextLineShouldBeName = false;
-        private int linesCount;
         private int count;
         public MainForm()
         {
@@ -72,32 +72,33 @@ namespace WindowsFormsApp2
         {
             if (string.IsNullOrEmpty(pipeDimension = fixedPipeDimension.Text))
                 MessageBox.Show("Please specify the pipe dimension used in the project");
-            if (string.IsNullOrEmpty(fixedLineWidth.Text))
-                MessageBox.Show("Please specify the line width used in the project");
-            else if (string.IsNullOrEmpty(parentDirectoryInput.Text))
-                MessageBox.Show("Please specify the parent directory used in the project");
-            else if (string.IsNullOrEmpty(targetDirectoryInput.Text))
+            else if (string.IsNullOrEmpty(parentDirectoryInput.Text) || !Directory.Exists(parentDirectoryInput.Text)) 
+            MessageBox.Show("Please specify the parent directory used in the project");
+            else if (string.IsNullOrEmpty(targetDirectoryInput.Text) || !Directory.Exists(targetDirectoryInput.Text))
                 MessageBox.Show("Please specify the target directory used in the project");
             else
             {
                 hasClickedCheck = true;
-                lineWidth = int.Parse(fixedLineWidth.Text) - 1;
+                
                 string[] files = Directory.GetFiles(parentDirectoryInput.Text, "*.ucbg");
+                ucbg_files = new List<UCBG_File>();
                 foreach (var file in files)
                 {
+                    ucbg_file = new UCBG_File();
+                    ucbg_file.name = file;
                     InitializeClassVariables(file);
                     if (File.Exists(targetPath)) File.Delete(targetPath);
                     identifyLinesAndPipes();
                     findIntersectingLines();
                     findIntersectingPipes();
                 }
+                MessageBox.Show("Checking Complete");
             }
-            MessageBox.Show("Checking Complete");
         }
         
         private void InitializeClassVariables(string file)
         {
-
+            
             intersectingLinesCount = 0;
             intersectingPipesCount = 0;
             testFile = Path.GetFileName(file);
@@ -112,16 +113,22 @@ namespace WindowsFormsApp2
             PipeDimensions = new List<FigureDimension>();
             StringBuilder sb = new StringBuilder();
             string[] strArr;
-            linesCount = 0;
+                        
             using (var mappedFile1 = MemoryMappedFile.CreateFromFile(path))
             {
                 using (Stream mmStream = mappedFile1.CreateViewStream())
                 {
                     using (StreamReader sr = new StreamReader(mmStream, ASCIIEncoding.ASCII))
                     {
+                        string line;
                         while (!sr.EndOfStream)
                         {
-                            var line = sr.ReadLine();
+                            line = sr.ReadLine();
+                            if (string.IsNullOrWhiteSpace(line))
+                            {
+                                sb.AppendLine(line);
+                                continue;
+                            }
                             var lineWords = line.Split(' ');
                             if (lineWords[0] == "N")
                             {
@@ -129,29 +136,26 @@ namespace WindowsFormsApp2
                                 {
                                     if (fd.shape == "line")
                                     {
-                                        //check line width(line no. 3 from bottom)
-                                        strArr = sb.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                                        strArr = sb.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                                         int len = strArr.Length;
-                                        if (strArr[len - 4].Trim() == lineWidth.ToString())
+                                        var words = strArr[len - 5].Split(' ');
+                                        //check shadow width at line no. 5 from bottom
+                                        if (!(
+                                            words.Length == 6 &&
+                                            words[0].StartsWith("\t") &&
+                                            Regex.IsMatch(words[0].Trim(), @"^\d+$") &&
+                                            Regex.IsMatch(words[1], @"^\d+$") &&
+                                            Regex.IsMatch(words[2], @"^\d+$") &&
+                                            Regex.IsMatch(words[3], @"^\d+$") &&
+                                            Regex.IsMatch(words[4], @"^\d+$")
+                                          ))
                                         {
                                             LineDimensions.Add(fd);
-                                            //if (fd.nameIsSet == false)
-                                            //{
-                                            //    strArr[6] = "	Name LINE" + ++linesCount;
-                                            //    fd.nameIsSet = true;
-                                            //    sb = new StringBuilder();
-                                            //    for (int i = 0; i < strArr.Length; i++)
-                                            //        sb.Append(strArr[i] + "\r\n");
-                                            //}
                                         }
                                     }
                                     else if (fd.shape == "pipe") PipeDimensions.Add(fd);
                                 }
                                 File.AppendAllText(targetPath, sb.ToString());
-                                if (lineWords[0] == "P")
-                                {
-
-                                }
                                 sb = new StringBuilder();
                                 fd = new FigureDimension();
                                 fd.nVal = nVal = int.Parse(lineWords[1]);
@@ -164,44 +168,12 @@ namespace WindowsFormsApp2
                                 fd.Ypos = (int)Math.Round(double.Parse(lineWords[2]), MidpointRounding.AwayFromZero);
                             }
                             
-                            //format of string for line recognition:"	0 0 1567 0"
-                            //if (
-                            //    lineWords.Length == 4 &&
-                            //    lineWords[0].StartsWith("\t") &&
-                            //    Regex.IsMatch(lineWords[0].Trim(), @"^\d+$") &&
-                            //    Regex.IsMatch(lineWords[1], @"^\d+$") &&
-                            //    Regex.IsMatch(lineWords[2], @"^\d+$") &&
-                            //    Regex.IsMatch(lineWords[3], @"^\d+$") &&
-                            //    (lineWords[0].Trim() == "0" && lineWords[1] == "0" && lineWords[2] != "0" && lineWords[3] == "0")
-                            //   )
-                            //{
-                            //    sb.Append(line + "\r\n");
-                            //    //go to the next line
-                            //    nextLineShouldBeName = true;
-                            //    continue;
-                            //}
-
-                            //if(nextLineShouldBeName == true)
-                            //{
-                            //    //format of string for line recognition:"	Name L1"
-                            //    if (lineWords[0].Trim() != "Name")
-                            //    {
-                            //        fd.nameIsSet = false;
-                            //        sb.Append("\r\n");
-                            //    }
-                            //    else
-                            //    {
-                            //        fd.nameIsSet = true;
-                            //    }
-                            //    nextLineShouldBeName = false;
-                            //}
-
                             //format of string for line recognition:"   0 451"
                             if (
                                 lineWords.Length == 2 &&
                                 lineWords[0].StartsWith("\t") &&
-                                Regex.IsMatch(lineWords[0].Trim(), @"^\d+$") &&
-                                Regex.IsMatch(lineWords[1], @"^\d+$") &&
+                                (Regex.IsMatch(lineWords[0].Trim(), @"^\d+$") || Regex.IsMatch(lineWords[0].Trim(), @"^(?:\d{1,2})?(?:\.\d{1,6})?$")) &&
+                                (Regex.IsMatch(lineWords[1], @"^\d+$") || Regex.IsMatch(lineWords[1], @"^(?:\d{1,2})?(?:\.\d{1,6})?$")) &&
                                 (width = (int)Math.Round(double.Parse(lineWords[0].Trim()), MidpointRounding.AwayFromZero)) != (height = (int)Math.Round(double.Parse(lineWords[1]), MidpointRounding.AwayFromZero)) &&
                                 (
                                     (width > 5 && height == 0) ||
@@ -240,32 +212,35 @@ namespace WindowsFormsApp2
                                 else
                                     fd.isHorizontal = false;
                             }
-                            sb.Append(line + "\r\n");
+                            if (line.StartsWith("\0")) continue;
+                            sb.AppendLine(line);
                         }
-                        startingNValueForCircle = nVal + 2;
+                        ucbg_file.startingNValueForCircle = nVal + 2;
+                        ucbg_files.Add(ucbg_file);
                         if (fd != null)
                         {
                             if (fd.shape == "line")
                             {
-                                //iterate backwards to set name(line no. 15 from bottom) and line width(line no. 9 from bottom)
-                                strArr = sb.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                                strArr = sb.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                                 int len = strArr.Length;
-                                if (strArr[len-4].Trim() == lineWidth.ToString())
+                                var words = strArr[len - 5].Split(' ');
+                                //check shadow width at line no. 5 from bottom
+                                if (!(
+                                    words.Length == 5 &&
+                                    words[0].StartsWith("\t") &&
+                                    Regex.IsMatch(words[0].Trim(), @"^\d+$") &&
+                                    Regex.IsMatch(words[1], @"^\d+$") &&
+                                    Regex.IsMatch(words[2], @"^\d+$") &&
+                                    Regex.IsMatch(words[3], @"^\d+$") &&
+                                    Regex.IsMatch(words[4], @"^\d+$") 
+                                  ))
                                 {
                                     LineDimensions.Add(fd);
-                                    //if (fd.nameIsSet == false)
-                                    //{
-                                    //    strArr[6] = "	Name LINE" + ++linesCount;
-                                    //    fd.nameIsSet = true;
-                                    //    sb = new StringBuilder();
-                                    //    for (int i = 0; i < strArr.Length; i++)
-                                    //        sb.Append(strArr[i] + "\r\n");
-                                    //}
                                 }
                             }
                             else if (fd.shape == "pipe") PipeDimensions.Add(fd);
                         }
-                        //File.AppendAllText(targetPath, sb.ToString());
+                        File.AppendAllText(targetPath, sb.ToString());
                     }
                 }
             }
@@ -302,16 +277,16 @@ namespace WindowsFormsApp2
             yPlusHeight = f2.Ypos + f2.height;
             xPlusWidthdiff = xPlusWidth - f2.Xpos;
             yPlusHeightdiff = yPlusHeight - f1.Ypos;
-            isXIntersecting = Math.Abs(xDiff) >= 1 && Math.Abs(xDiff) < 5;
-            isXPlusWidthIntersecting = Math.Abs(xPlusWidthdiff) >= 1 && Math.Abs(xPlusWidthdiff) < 5;
-            isYIntersecting = Math.Abs(yDiff) >= 1 && Math.Abs(yDiff) < 5;
-            isYPlusHeightIntersecting = Math.Abs(yPlusHeightdiff) >= 1 && Math.Abs(yPlusHeightdiff) < 5;
+            isXIntersecting = Math.Abs(xDiff) >= 1 && Math.Abs(xDiff) <= 5;
+            isXPlusWidthIntersecting = Math.Abs(xPlusWidthdiff) >= 1 && Math.Abs(xPlusWidthdiff) <= 5;
+            isYIntersecting = Math.Abs(yDiff) >= 1 && Math.Abs(yDiff) <= 5;
+            isYPlusHeightIntersecting = Math.Abs(yPlusHeightdiff) >= 1 && Math.Abs(yPlusHeightdiff) <= 5;
             isXInBetween = f2.Xpos > f1.Xpos && f2.Xpos < xPlusWidth;
             isYInBetween = f2.Ypos > f1.Ypos && f2.Ypos < yPlusHeight;
-            isXIntersectingFromClose = Math.Abs(xDiff) < 5;
-            isYIntersectingFromClose = Math.Abs(yDiff) < 5;
-            isXPlusWidthIntersectingFromClose = Math.Abs(xPlusWidthdiff) < 5;
-            isYPlusHeightIntersectingFromClose = Math.Abs(yPlusHeightdiff) < 5;
+            isXIntersectingFromClose = Math.Abs(xDiff) <= 5;
+            isYIntersectingFromClose = Math.Abs(yDiff) <= 5;
+            isXPlusWidthIntersectingFromClose = Math.Abs(xPlusWidthdiff) <= 5;
+            isYPlusHeightIntersectingFromClose = Math.Abs(yPlusHeightdiff) <= 5;
             if (isXIntersecting && isYIntersectingFromClose || isXIntersectingFromClose && isYIntersecting)
             {
                 //Top left
@@ -367,20 +342,19 @@ namespace WindowsFormsApp2
                 count = intersectingPipesCount;
             }
             StringBuilder sb = new StringBuilder();
-            if (intersectingLinesCount + intersectingPipesCount == 1) sb.AppendLine("N 999999999999999999");
             using (StreamWriter w = File.AppendText(targetPath))
             {
-                sb.AppendLine("N " + (startingNValueForCircle + (2*intersectingLinesCount) + (2* intersectingPipesCount) -2));
+                sb.AppendLine("N " + (ucbg_file.startingNValueForCircle + ((2*intersectingLinesCount) + (2* intersectingPipesCount) -2)));
                 sb.AppendLine("P " + (xpos - 13) + " " + (ypos - 13));
                 sb.AppendLine("T - 1");
                 sb.AppendLine("R 0 0");
                 sb.AppendLine("0");
                 sb.AppendLine("\t0 5 7 0");
-                sb.AppendLine("\t Name TEST_C" + count);
+                sb.AppendLine("\tName TEST_C" + count);
                 sb.AppendLine("\t0 1 1");
                 sb.AppendLine("!");
-                sb.AppendLine("ffffffff");
-                sb.AppendLine("0");
+                sb.AppendLine("2fe");
+                //sb.AppendLine("0");
                 sb.AppendLine("-10000");
                 sb.AppendLine("c0c0c0");
                 sb.AppendLine("0");
@@ -388,9 +362,9 @@ namespace WindowsFormsApp2
                 sb.AppendLine("0");
                 sb.AppendLine("0 0");
                 sb.AppendLine("1");
-                sb.AppendLine("\tDefault");
+                //sb.AppendLine("\tDefault");
                 sb.AppendLine("\t0 0 26 26");
-                sb.AppendLine("0 23040");
+                sb.AppendLine("\t0 23040");
 
                 w.WriteLine(sb.ToString());
             }
@@ -400,11 +374,10 @@ namespace WindowsFormsApp2
         {
             if (hasClickedCheck == true)
             {
-                string[] files = Directory.GetFiles(parentDirectoryInput.Text, "*.ucbg");
-                foreach (var file in files)
+                foreach (var file in ucbg_files)
                 {
                     stopAddingToBuffer = false;
-                    testFile = Path.GetFileName(file);
+                    testFile = Path.GetFileName(file.name);
                     targetPath = Path.Combine(targetDirectoryInput.Text, testFile);
                     if (intersectingLinesCount == 0 && intersectingPipesCount == 0)
                     {
@@ -422,7 +395,8 @@ namespace WindowsFormsApp2
                                     while (!sr.EndOfStream)
                                     {
                                         var line = sr.ReadLine();
-                                        if (line == "N 999999999999999999")
+                                        var lineWords = line.Split(' ');
+                                        if (lineWords[0] == "N" && lineWords[1] == file.startingNValueForCircle.ToString())
                                         {
                                             stopAddingToBuffer = true;
                                         }

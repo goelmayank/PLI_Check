@@ -41,8 +41,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.UpdatePath = new System.Windows.Forms.Button();
             this.UpdateTargetPath = new System.Windows.Forms.Button();
-            this.fixedLineWidth = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -152,30 +150,11 @@
             this.UpdateTargetPath.UseVisualStyleBackColor = true;
             this.UpdateTargetPath.Click += new System.EventHandler(this.UpdateTargetPath_Click);
             // 
-            // fixedLineWidth
-            // 
-            this.fixedLineWidth.Location = new System.Drawing.Point(272, 31);
-            this.fixedLineWidth.Name = "fixedLineWidth";
-            this.fixedLineWidth.Size = new System.Drawing.Size(31, 20);
-            this.fixedLineWidth.TabIndex = 29;
-            this.fixedLineWidth.Text = "3";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(170, 34);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(86, 13);
-            this.label4.TabIndex = 28;
-            this.label4.Text = "Fixed Line Width";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(315, 107);
-            this.Controls.Add(this.fixedLineWidth);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.UpdateTargetPath);
             this.Controls.Add(this.UpdatePath);
             this.Controls.Add(this.label3);
@@ -210,8 +189,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button UpdatePath;
         private System.Windows.Forms.Button UpdateTargetPath;
-        private System.Windows.Forms.TextBox fixedLineWidth;
-        private System.Windows.Forms.Label label4;
     }
 }
 
