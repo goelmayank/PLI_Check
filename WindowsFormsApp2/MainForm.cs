@@ -8,6 +8,10 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp2
 {
+    /// <summary>
+    /// Main Form
+    /// </summary>
+    /// <seealso cref="System.Windows.Forms.Form" />
     public partial class MainForm : Form
     {
         public class FigureDimension
@@ -28,7 +32,7 @@ namespace WindowsFormsApp2
         private static string path;
         private static string targetPath;
         private string testFile;
-        
+
         private static List<FigureDimension> LineDimensions = null;
         private static List<FigureDimension> PipeDimensions = null;
         private static List<UCBG_File> ucbg_files = null;
@@ -56,7 +60,6 @@ namespace WindowsFormsApp2
         private bool isXPlusWidthIntersectingFromClose;
         private bool isYPlusHeightIntersectingFromClose;
         private bool hasClickedCheck = false;
-        private string pipeDimension;
         private int count;
         public MainForm()
         {
@@ -65,21 +68,19 @@ namespace WindowsFormsApp2
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This application is developed by Mayank Goel, Intern, ABB Pvt Ltd. Please read the README.htm for more instructions.");
+            MessageBox.Show("This sample is developed by IAPG, ABB. Please read the Readme.docx for more details");
         }
 
         private void checkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(pipeDimension = fixedPipeDimension.Text))
-                MessageBox.Show("Please specify the pipe dimension used in the project");
-            else if (string.IsNullOrEmpty(parentDirectoryInput.Text) || !Directory.Exists(parentDirectoryInput.Text)) 
-            MessageBox.Show("Please specify the parent directory used in the project");
+            if (string.IsNullOrEmpty(parentDirectoryInput.Text) || !Directory.Exists(parentDirectoryInput.Text))
+                MessageBox.Show("Please specify the parent directory used in the project");
             else if (string.IsNullOrEmpty(targetDirectoryInput.Text) || !Directory.Exists(targetDirectoryInput.Text))
                 MessageBox.Show("Please specify the target directory used in the project");
             else
             {
                 hasClickedCheck = true;
-                
+
                 string[] files = Directory.GetFiles(parentDirectoryInput.Text, "*.ucbg");
                 ucbg_files = new List<UCBG_File>();
                 foreach (var file in files)
@@ -90,15 +91,14 @@ namespace WindowsFormsApp2
                     if (File.Exists(targetPath)) File.Delete(targetPath);
                     identifyLinesAndPipes();
                     findIntersectingLines();
-                    findIntersectingPipes();
                 }
                 MessageBox.Show("Checking Complete");
             }
         }
-        
+
         private void InitializeClassVariables(string file)
         {
-            
+
             intersectingLinesCount = 0;
             intersectingPipesCount = 0;
             testFile = Path.GetFileName(file);
@@ -113,7 +113,7 @@ namespace WindowsFormsApp2
             PipeDimensions = new List<FigureDimension>();
             StringBuilder sb = new StringBuilder();
             string[] strArr;
-                        
+
             using (var mappedFile1 = MemoryMappedFile.CreateFromFile(path))
             {
                 using (Stream mmStream = mappedFile1.CreateViewStream())
@@ -167,7 +167,7 @@ namespace WindowsFormsApp2
                                 fd.Xpos = (int)Math.Round(double.Parse(lineWords[1]), MidpointRounding.AwayFromZero);
                                 fd.Ypos = (int)Math.Round(double.Parse(lineWords[2]), MidpointRounding.AwayFromZero);
                             }
-                            
+
                             //format of string for line recognition:"   0 451"
                             if (
                                 lineWords.Length == 2 &&
@@ -190,28 +190,6 @@ namespace WindowsFormsApp2
                                     fd.isHorizontal = false;
                             }
 
-                            //format of string for pipe recognition:"  0 0 7 451 0 0"
-                            if (
-                                lineWords.Length == 6 &&
-                                lineWords[0].StartsWith("\t") &&
-                                Regex.IsMatch(lineWords[0].Trim(), @"^\d+$") &&
-                                Regex.IsMatch(lineWords[1], @"^\d+$") &&
-                                Regex.IsMatch(lineWords[2], @"^\d+$") &&
-                                Regex.IsMatch(lineWords[3], @"^\d+$") &&
-                                Regex.IsMatch(lineWords[4], @"^\d+$") &&
-                                Regex.IsMatch(lineWords[5], @"^\d+$") &&
-                                (lineWords[0].Trim() == "0" && lineWords[1] == "0" && lineWords[4] == "0" && lineWords[5] == "0") &&
-                                (lineWords[2] == pipeDimension || lineWords[3] == pipeDimension)
-                               )
-                            {
-                                fd.width = (int)Math.Round(double.Parse(lineWords[2]), MidpointRounding.AwayFromZero);
-                                fd.height = (int)Math.Round(double.Parse(lineWords[3]), MidpointRounding.AwayFromZero);
-                                fd.shape = "pipe";
-                                if (lineWords[3] == pipeDimension)
-                                    fd.isHorizontal = true;
-                                else
-                                    fd.isHorizontal = false;
-                            }
                             if (line.StartsWith("\0")) continue;
                             sb.AppendLine(line);
                         }
@@ -232,38 +210,26 @@ namespace WindowsFormsApp2
                                     Regex.IsMatch(words[1], @"^\d+$") &&
                                     Regex.IsMatch(words[2], @"^\d+$") &&
                                     Regex.IsMatch(words[3], @"^\d+$") &&
-                                    Regex.IsMatch(words[4], @"^\d+$") 
+                                    Regex.IsMatch(words[4], @"^\d+$")
                                   ))
                                 {
                                     LineDimensions.Add(fd);
                                 }
                             }
-                            else if (fd.shape == "pipe") PipeDimensions.Add(fd);
+                            
                         }
                         File.AppendAllText(targetPath, sb.ToString());
                     }
                 }
             }
         }
-                
+
         private void findIntersectingLines()
         {
             foreach (var f1 in LineDimensions.FindAll(i => i.isHorizontal == true))
             {
                 xPlusWidth = f1.Xpos + f1.width;
                 foreach (var f2 in LineDimensions.FindAll(i => i.isHorizontal == false))
-                {
-                    applyIntersectionLogic(f1, f2);
-                }
-            }
-        }
-
-        private void findIntersectingPipes()
-        {
-            foreach (var f1 in PipeDimensions.FindAll(i => i.isHorizontal == true))
-            {
-                xPlusWidth = f1.Xpos + f1.width;
-                foreach (var f2 in PipeDimensions.FindAll(i => i.isHorizontal == false))
                 {
                     applyIntersectionLogic(f1, f2);
                 }
@@ -329,7 +295,7 @@ namespace WindowsFormsApp2
             }
         }
 
-        private void MarkWithACircle(double xpos, double ypos , string shape)
+        private void MarkWithACircle(double xpos, double ypos, string shape)
         {
             if (shape == "line")
             {
@@ -344,7 +310,7 @@ namespace WindowsFormsApp2
             StringBuilder sb = new StringBuilder();
             using (StreamWriter w = File.AppendText(targetPath))
             {
-                sb.AppendLine("N " + (ucbg_file.startingNValueForCircle + ((2*intersectingLinesCount) + (2* intersectingPipesCount) -2)));
+                sb.AppendLine("N " + (ucbg_file.startingNValueForCircle + ((2 * intersectingLinesCount) - 2)));
                 sb.AppendLine("P " + (xpos - 13) + " " + (ypos - 13));
                 sb.AppendLine("T - 1");
                 sb.AppendLine("R 0 0");
@@ -354,7 +320,6 @@ namespace WindowsFormsApp2
                 sb.AppendLine("\t0 1 1");
                 sb.AppendLine("!");
                 sb.AppendLine("2fe");
-                //sb.AppendLine("0");
                 sb.AppendLine("-10000");
                 sb.AppendLine("c0c0c0");
                 sb.AppendLine("0");
@@ -362,7 +327,6 @@ namespace WindowsFormsApp2
                 sb.AppendLine("0");
                 sb.AppendLine("0 0");
                 sb.AppendLine("1");
-                //sb.AppendLine("\tDefault");
                 sb.AppendLine("\t0 0 26 26");
                 sb.AppendLine("\t0 23040");
 
@@ -379,7 +343,7 @@ namespace WindowsFormsApp2
                     stopAddingToBuffer = false;
                     testFile = Path.GetFileName(file.name);
                     targetPath = Path.Combine(targetDirectoryInput.Text, testFile);
-                    if (intersectingLinesCount == 0 && intersectingPipesCount == 0)
+                    if (intersectingLinesCount == 0)
                     {
                         MessageBox.Show("No circles found in " + testFile);
                     }
@@ -423,7 +387,7 @@ namespace WindowsFormsApp2
         private void UpdatePath_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
-            
+
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 parentDirectoryInput.Text = dlg.SelectedPath;
@@ -433,7 +397,7 @@ namespace WindowsFormsApp2
         private void UpdateTargetPath_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
-            
+
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 targetDirectoryInput.Text = dlg.SelectedPath;

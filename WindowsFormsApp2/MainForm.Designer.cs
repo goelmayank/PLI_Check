@@ -33,8 +33,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rectifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fixedPipeDimension = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.parentDirectoryInput = new System.Windows.Forms.TextBox();
             this.targetDirectoryInput = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -77,26 +75,9 @@
             this.rectifyToolStripMenuItem.Text = "Rectify";
             this.rectifyToolStripMenuItem.Click += new System.EventHandler(this.rectifyToolStripMenuItem_Click);
             // 
-            // fixedPipeDimension
-            // 
-            this.fixedPipeDimension.Location = new System.Drawing.Point(123, 31);
-            this.fixedPipeDimension.Name = "fixedPipeDimension";
-            this.fixedPipeDimension.Size = new System.Drawing.Size(30, 20);
-            this.fixedPipeDimension.TabIndex = 21;
-            this.fixedPipeDimension.Text = "7";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 34);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 13);
-            this.label1.TabIndex = 20;
-            this.label1.Text = "Fixed Pipe Dimension";
-            // 
             // parentDirectoryInput
             // 
-            this.parentDirectoryInput.Location = new System.Drawing.Point(95, 57);
+            this.parentDirectoryInput.Location = new System.Drawing.Point(95, 27);
             this.parentDirectoryInput.Name = "parentDirectoryInput";
             this.parentDirectoryInput.Size = new System.Drawing.Size(183, 20);
             this.parentDirectoryInput.TabIndex = 22;
@@ -105,7 +86,7 @@
             // 
             // targetDirectoryInput
             // 
-            this.targetDirectoryInput.Location = new System.Drawing.Point(95, 83);
+            this.targetDirectoryInput.Location = new System.Drawing.Point(95, 53);
             this.targetDirectoryInput.Name = "targetDirectoryInput";
             this.targetDirectoryInput.Size = new System.Drawing.Size(183, 20);
             this.targetDirectoryInput.TabIndex = 23;
@@ -115,7 +96,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 60);
+            this.label2.Location = new System.Drawing.Point(9, 30);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 13);
             this.label2.TabIndex = 24;
@@ -124,7 +105,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 86);
+            this.label3.Location = new System.Drawing.Point(9, 56);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(83, 13);
             this.label3.TabIndex = 25;
@@ -132,9 +113,9 @@
             // 
             // UpdatePath
             // 
-            this.UpdatePath.Location = new System.Drawing.Point(284, 55);
+            this.UpdatePath.Location = new System.Drawing.Point(284, 25);
             this.UpdatePath.Name = "UpdatePath";
-            this.UpdatePath.Size = new System.Drawing.Size(25, 23);
+            this.UpdatePath.Size = new System.Drawing.Size(25, 20);
             this.UpdatePath.TabIndex = 26;
             this.UpdatePath.Text = "...";
             this.UpdatePath.UseVisualStyleBackColor = true;
@@ -142,9 +123,9 @@
             // 
             // UpdateTargetPath
             // 
-            this.UpdateTargetPath.Location = new System.Drawing.Point(284, 81);
+            this.UpdateTargetPath.Location = new System.Drawing.Point(284, 51);
             this.UpdateTargetPath.Name = "UpdateTargetPath";
-            this.UpdateTargetPath.Size = new System.Drawing.Size(25, 23);
+            this.UpdateTargetPath.Size = new System.Drawing.Size(25, 20);
             this.UpdateTargetPath.TabIndex = 27;
             this.UpdateTargetPath.Text = "...";
             this.UpdateTargetPath.UseVisualStyleBackColor = true;
@@ -154,15 +135,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(315, 107);
+            this.ClientSize = new System.Drawing.Size(315, 84);
             this.Controls.Add(this.UpdateTargetPath);
             this.Controls.Add(this.UpdatePath);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.targetDirectoryInput);
             this.Controls.Add(this.parentDirectoryInput);
-            this.Controls.Add(this.fixedPipeDimension);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -181,8 +160,6 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rectifyToolStripMenuItem;
-        private System.Windows.Forms.TextBox fixedPipeDimension;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox parentDirectoryInput;
         private System.Windows.Forms.TextBox targetDirectoryInput;
         private System.Windows.Forms.Label label2;
