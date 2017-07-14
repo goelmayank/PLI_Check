@@ -61,16 +61,29 @@ namespace WindowsFormsApp2
         private bool isYPlusHeightIntersectingFromClose;
         private bool hasClickedCheck = false;
         private int count;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainForm"/> class.
+        /// </summary>
         public MainForm()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Handles the Click event of the aboutToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("This sample is developed by IAPG, ABB. Please read the Readme.docx for more details");
         }
 
+        /// <summary>
+        /// Handles the Click event of the checkToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void checkToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(parentDirectoryInput.Text) || !Directory.Exists(parentDirectoryInput.Text))
@@ -96,6 +109,10 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// Initializes the class variables.
+        /// </summary>
+        /// <param name="file">The file.</param>
         private void InitializeClassVariables(string file)
         {
 
@@ -106,6 +123,9 @@ namespace WindowsFormsApp2
             targetPath = Path.Combine(targetDirectoryInput.Text, testFile);
         }
 
+        /// <summary>
+        /// Identifies the lines and pipes.
+        /// </summary>
         private void identifyLinesAndPipes()
         {
             FigureDimension fd = null;
@@ -224,6 +244,9 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// Finds the intersecting lines.
+        /// </summary>
         private void findIntersectingLines()
         {
             foreach (var f1 in LineDimensions.FindAll(i => i.isHorizontal == true))
@@ -236,6 +259,11 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// Applies the intersection logic.
+        /// </summary>
+        /// <param name="f1">The f1.</param>
+        /// <param name="f2">The f2.</param>
         private void applyIntersectionLogic(FigureDimension f1, FigureDimension f2)
         {
             xDiff = f1.Xpos - f2.Xpos;
@@ -295,6 +323,12 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// Marks the with a circle.
+        /// </summary>
+        /// <param name="xpos">The xpos.</param>
+        /// <param name="ypos">The ypos.</param>
+        /// <param name="shape">The shape.</param>
         private void MarkWithACircle(double xpos, double ypos, string shape)
         {
             if (shape == "line")
@@ -334,6 +368,11 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the rectifyToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void rectifyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (hasClickedCheck == true)
@@ -384,6 +423,11 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the UpdatePath control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void UpdatePath_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
@@ -394,6 +438,11 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the UpdateTargetPath control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void UpdateTargetPath_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
